@@ -73,7 +73,7 @@ jobs:
           fi
       - name: Upload Release Assets
         if: github.event_name == 'release' # Only on release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: |
             nzbrefresh_*.zip

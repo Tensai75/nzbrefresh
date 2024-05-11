@@ -1,0 +1,54 @@
+[
+    {
+      "Name": "Provider 1",
+      "Host": "",
+      "Port": 119,
+      "SSL": false,
+      "SkipSslCheck": true,
+      "Username": "",
+      "Password": "",
+      "Retries": 3,
+      "WaitTime": 10,
+      "MaxConns": 10,
+      "IdleTimeout": 30
+    },
+    {
+      "Name": "Provider 2",
+      "Host": "",
+      "Port": 119,
+      "SSL": false,
+      "SkipSslCheck": true,
+      "Username": "",
+      "Password": "",
+      "Retries": 3,
+      "WaitTime": 10,
+      "MaxConns": 10,
+      "IdleTimeout": 30
+    },
+    {
+      "Name": "Provider 3",
+      "Host": "",
+      "Port": 119,
+      "SSL": false,
+      "SkipSslCheck": true,
+      "Username": "",
+      "Password": "",
+      "Retries": 3,
+      "WaitTime": 10,
+      "MaxConns": 10,
+      "IdleTimeout": 30
+    },
+    {
+      "Name": "Provider 4",
+      "Host": "",
+      "Port": 119,
+      "SSL": false,
+      "SkipSslCheck": true,
+      "Username": "",
+      "Password": "",
+      "Retries": 3,
+      "WaitTime": 10,
+      "MaxConns": 10,
+      "IdleTimeout": 30
+    }
+  ]

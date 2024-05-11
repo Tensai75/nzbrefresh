@@ -1,0 +1,80 @@
+name: Build and Publish
+
+on:
+  release:
+    types:
+      - published
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os-arch:
+          - name: Linux-amd64
+            os: linux
+            arch: amd64
+          - name: macOS-amd64
+            os: darwin
+            arch: amd64
+          - name: macOS-arm64
+            os: darwin
+            arch: arm64
+          - name: Windows-amd64
+            os: windows
+            arch: amd64
+          - name: Linux-arm64
+            os: linux
+            arch: arm64
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version-file: 'go.mod' # Use the Go version specified in go.mod
+      - name: Set Ref Name Variable
+        run: |
+          if [ "$GITHUB_EVENT_NAME" != "release" ]; then
+            # Use Git commit SHA as the reference when manually triggered
+            ref_name=${GITHUB_SHA::7}
+          else
+            ref_name=${{ github.ref_name }}
+          fi
+          echo "REF_NAME=${ref_name}" >> "$GITHUB_ENV"
+      - name: Build for ${{ matrix.os-arch.name }}
+        run: |
+          mkdir -p builds/${{ matrix.os-arch.name }}/usr/bin
+          if [ "${{ matrix.os-arch.os }}" == "windows" ]; then
+            # For Windows, add .exe to the binary name
+            binary_name=nzbrefresh.exe
+          else
+            binary_name=nzbrefresh
+          fi
+          GOARCH=${{ matrix.os-arch.arch }} GOOS=${{ matrix.os-arch.os }} go build -ldflags="-s -w -X main.appVersion=${{ env.REF_NAME }}" -o builds/${{ matrix.os-arch.name }}/usr/bin/$binary_name
+          zip -j "nzbrefresh_${{ env.REF_NAME }}-${{ matrix.os-arch.os }}-${{ matrix.os-arch.arch }}.zip" builds/${{ matrix.os-arch.name }}/usr/bin/$binary_name config.json
+          # Makeing deb packages for linux and darwin
+          if [ "${{ matrix.os-arch.os }}" == "linux"  ] || [ "${{ matrix.os-arch.os }}" == "darwin"  ]; then
+            mkdir -p builds/${{ matrix.os-arch.name }}/DEBIAN
+            VERSION=$(echo "${{ github.ref_name }}" | sed 's/^v//')
+            if [ "${{ matrix.os-arch.os }}" == "darwin" ]; then
+              ARCH=${{ matrix.os-arch.os }}-${{ matrix.os-arch.arch }}
+            else
+              ARCH=${{ matrix.os-arch.arch }}
+            fi
+            echo "Package: nzbrefresh" >> builds/${{ matrix.os-arch.name }}/DEBIAN/control
+            echo "Version: ${VERSION}" >> builds/${{ matrix.os-arch.name }}/DEBIAN/control
+            echo "Maintainer: ${{ github.repository_owner }} <${{ github.repository_owner_email }}>" >> builds/${{ matrix.os-arch.name }}/DEBIAN/control
+            echo "Architecture: ${ARCH}" >> builds/${{ matrix.os-arch.name }}/DEBIAN/control
+            echo "Description: NZB Refresh - a cmd line tool to re-upload articles missing from low retention providers or after takedowns" >> builds/${{ matrix.os-arch.name }}/DEBIAN/control
+            dpkg-deb --root-owner-group --build builds/${{ matrix.os-arch.name }} nzbrefresh_${{ env.REF_NAME }}-${{ matrix.os-arch.os }}-${{ matrix.os-arch.arch }}.deb
+          fi
+      - name: Upload Release Assets
+        if: github.event_name == 'release' # Only on release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            nzbrefresh_*.zip
+            nzbrefresh_*.deb

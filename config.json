@@ -7,10 +7,11 @@
       "SkipSslCheck": true,
       "Username": "",
       "Password": "",
-      "Retries": 3,
-      "WaitTime": 10,
-      "MaxConns": 10,
-      "IdleTimeout": 30
+      "ConnWaitTime": 10,
+      "MaxConns": 50,
+      "IdleTimeout": 30,
+      "MaxTooManyConnsErrors": 3,
+      "MaxConnErrors": 3
     },
     {
       "Name": "Provider 2",
@@ -20,10 +21,11 @@
       "SkipSslCheck": true,
       "Username": "",
       "Password": "",
-      "Retries": 3,
-      "WaitTime": 10,
-      "MaxConns": 10,
-      "IdleTimeout": 30
+      "ConnWaitTime": 10,
+      "MaxConns": 50,
+      "IdleTimeout": 30,
+      "MaxTooManyConnsErrors": 3,
+      "MaxConnErrors": 3
     },
     {
       "Name": "Provider 3",
@@ -33,10 +35,11 @@
       "SkipSslCheck": true,
       "Username": "",
       "Password": "",
-      "Retries": 3,
-      "WaitTime": 10,
-      "MaxConns": 10,
-      "IdleTimeout": 30
+      "ConnWaitTime": 10,
+      "MaxConns": 50,
+      "IdleTimeout": 30,
+      "MaxTooManyConnsErrors": 3,
+      "MaxConnErrors": 3
     },
     {
       "Name": "Provider 4",
@@ -46,9 +49,10 @@
       "SkipSslCheck": true,
       "Username": "",
       "Password": "",
-      "Retries": 3,
-      "WaitTime": 10,
-      "MaxConns": 10,
-      "IdleTimeout": 30
+      "ConnWaitTime": 10,
+      "MaxConns": 50,
+      "IdleTimeout": 30,
+      "MaxTooManyConnsErrors": 3,
+      "MaxConnErrors": 3
     }
   ]

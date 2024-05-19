@@ -30,8 +30,14 @@ This is a Proof of Concept with the minimum necessary features.
 So there is certainly a lot left to do.
 
 ## Version history
+### alpha 2
+- highly improved version with parallel processing
+
 ### alpha 1
 - first public version
 
 ## Credits
 This software is built using golang ([License](https://go.dev/LICENSE)).
+
+This software uses the following external libraries:
+- github.com/schollz/progressbar/v3 ([License](https://github.com/schollz/progressbar/blob/main/LICENSE))

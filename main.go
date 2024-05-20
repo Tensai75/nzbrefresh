@@ -29,6 +29,7 @@ type (
 		MaxConns              uint32
 		ConnWaitTime          time.Duration
 		IdleTimeout           time.Duration
+		HealthCheck           bool
 		MaxTooManyConnsErrors uint32
 		MaxConnErrors         uint32
 
@@ -123,6 +124,7 @@ func init() {
 				MaxConns:              providerList[n].MaxConns,
 				ConnWaitTime:          time.Duration(providerList[n].ConnWaitTime) * time.Second,
 				IdleTimeout:           time.Duration(providerList[n].IdleTimeout) * time.Second,
+				HealthCheck:           providerList[n].HealthCheck,
 				MaxTooManyConnsErrors: providerList[n].MaxTooManyConnsErrors,
 				MaxConnErrors:         providerList[n].MaxConnErrors,
 			}, 0); err != nil {
@@ -215,10 +217,8 @@ func checkCapabilities(provider *Provider) (bool, bool, error) {
 		return false, false, err
 	} else {
 		defer provider.pool.Put(conn)
-		if capabilities, err := conn.Capabilities(); err != nil {
-			return false, false, err
-		} else {
-			var ihave, post bool
+		var ihave, post bool
+		if capabilities, err := conn.Capabilities(); err == nil {
 			for _, capability := range capabilities {
 				if strings.ToLower(capability) == "ihave" {
 					ihave = true
@@ -227,8 +227,27 @@ func checkCapabilities(provider *Provider) (bool, bool, error) {
 					post = true
 				}
 			}
-			return ihave, post, nil
+		} else {
+			// nntp server is not RFC 3977 compliant
+			// check post capability
+			article := new(nntp.Article)
+			if err := conn.Post(article); err != nil {
+				if err.Error()[0:3] != "440" {
+					post = true
+				}
+			} else {
+				post = true
+			}
+			// check ihave capability
+			if err := conn.IHave(article); err != nil {
+				if err.Error()[0:3] != "500" {
+					ihave = true
+				}
+			} else {
+				ihave = true
+			}
 		}
+		return ihave, post, nil
 	}
 }
 
@@ -372,22 +391,19 @@ func sendArticleToProvider(provider *Provider, article *nntp.Article) error {
 			article.Header["Date"] = make([]string, 1)
 		}
 		article.Header["Date"][0] = time.Now().Format(time.RFC1123Z)
-		// upload article either with IHAVE or POST
+		// upload article either with IHAVE (if available) or POST
 		if provider.capabilities.ihave {
-			// TODO: implemented IHAVE command into nntp module
-			// if err := conn.IHave(article); err != nil {
-			//	 return err
-			// } else {
-			//   return nil
-			// }
-		}
-		if provider.capabilities.post {
+			if err := conn.IHave(article); err != nil {
+				return err
+			} else {
+				return nil
+			}
+		} else {
 			if err := conn.Post(article); err != nil {
 				return err
 			} else {
 				return nil
 			}
 		}
-		return fmt.Errorf("IHAVE function not yet implemented")
 	}
 }

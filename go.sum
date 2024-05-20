@@ -1,7 +1,13 @@
 github.com/Tensai75/nntp v0.0.0-20220306114527-c8bbbeefcca2 h1:XZE73wcDDVOqn/WMkncrdRbGfwLbVeR7gnMxP9BDDlE=
 github.com/Tensai75/nntp v0.0.0-20220306114527-c8bbbeefcca2/go.mod h1:0bz2Cxmgtz3CmN9ISQH7lBoPxMsEq+nOSXKJqdwljpM=
+github.com/Tensai75/nntp v0.0.0-20240520092057-6d6be647ec77 h1:c5JbD3BYlFNub/cMhiUCKYWQhJVGLkzGWUoEcETnv9c=
+github.com/Tensai75/nntp v0.0.0-20240520092057-6d6be647ec77/go.mod h1:0bz2Cxmgtz3CmN9ISQH7lBoPxMsEq+nOSXKJqdwljpM=
 github.com/Tensai75/nntpPool v0.0.0-20240519093011-1faaa3656630 h1:gj4h+FL6I1tnF57szYKz6E4Ke4KEYKVWcw7Oqm+nh5E=
 github.com/Tensai75/nntpPool v0.0.0-20240519093011-1faaa3656630/go.mod h1:BxzkJwnROuXe8+5D4iy7d+5uBbg79E50nt8ZWqhkKqc=
+github.com/Tensai75/nntpPool v0.0.0-20240519095722-a5007e5a7099 h1:oXGQja/4qZaaGKsXNwFa65sDFo2L88BxrrHQo+dfWTs=
+github.com/Tensai75/nntpPool v0.0.0-20240519095722-a5007e5a7099/go.mod h1:BxzkJwnROuXe8+5D4iy7d+5uBbg79E50nt8ZWqhkKqc=
+github.com/Tensai75/nntpPool v0.0.0-20240520102111-4e5dcaf5a6a5 h1:zg3aa4g/eGmInPEKu/2/EEfzNqek16QWjCFPwYSkKHE=
+github.com/Tensai75/nntpPool v0.0.0-20240520102111-4e5dcaf5a6a5/go.mod h1:BxzkJwnROuXe8+5D4iy7d+5uBbg79E50nt8ZWqhkKqc=
 github.com/Tensai75/nzbparser v0.0.0-20240511081422-ab40863e6df5 h1:3XCiYjDG0Gx3FiToJyibiMLda4zBRLnqcV6T9AnEFuI=
 github.com/Tensai75/nzbparser v0.0.0-20240511081422-ab40863e6df5/go.mod h1:GsLExFYgUcBQvETN0D91HeALBoAJPmXGvICFfsqEBtw=
 github.com/Tensai75/subjectparser v0.0.0-20240511081302-1e97329a5fe7 h1:ix/Vvx/MkRRmKQ4zm1BTpX6AxGqVlFiabiW7uRNlzZI=

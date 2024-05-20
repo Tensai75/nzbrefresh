@@ -3,8 +3,8 @@ module github.com/Tensai75/nzbrefresh
 go 1.22
 
 require (
-	github.com/Tensai75/nntp v0.0.0-20220306114527-c8bbbeefcca2
-	github.com/Tensai75/nntpPool v0.0.0-20240519093011-1faaa3656630
+	github.com/Tensai75/nntp v0.0.0-20240520092057-6d6be647ec77
+	github.com/Tensai75/nntpPool v0.0.0-20240520102111-4e5dcaf5a6a5
 	github.com/Tensai75/nzbparser v0.0.0-20240511081422-ab40863e6df5
 	github.com/schollz/progressbar/v3 v3.14.2
 )

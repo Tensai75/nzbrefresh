@@ -10,6 +10,7 @@
       "ConnWaitTime": 10,
       "MaxConns": 50,
       "IdleTimeout": 30,
+      "HealthCheck": false,
       "MaxTooManyConnsErrors": 3,
       "MaxConnErrors": 3
     },
@@ -24,6 +25,7 @@
       "ConnWaitTime": 10,
       "MaxConns": 50,
       "IdleTimeout": 30,
+      "HealthCheck": false,
       "MaxTooManyConnsErrors": 3,
       "MaxConnErrors": 3
     },
@@ -38,6 +40,7 @@
       "ConnWaitTime": 10,
       "MaxConns": 50,
       "IdleTimeout": 30,
+      "HealthCheck": false,
       "MaxTooManyConnsErrors": 3,
       "MaxConnErrors": 3
     },
@@ -52,6 +55,7 @@
       "ConnWaitTime": 10,
       "MaxConns": 50,
       "IdleTimeout": 30,
+      "HealthCheck": false,
       "MaxTooManyConnsErrors": 3,
       "MaxConnErrors": 3
     }

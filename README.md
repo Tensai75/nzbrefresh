@@ -4,24 +4,40 @@
 # NZB Refresh
 Proof of concept for a cmd line tool to re-upload articles that are missing from providers with low retention or after takedowns.
 
-The cmd line tool analyses the NZB file specified as argument 1 and checks the availability of the individual articles at all Usenet providers listed in the config.json.
+The cmd line tool analyses the NZB file specified as positional argument and checks the availability of the individual articles at all Usenet providers listed in the provider.json.
 If an article is missing from one or more providers, but is still available from at least one provider, the tool downloads the article from the provider where the article is still available and re-uploads it to the providers where the article is missing.
-The tool currently uses the POST command to re-upload the article. It is planned to also use the IHAVE command as the preferred option.
+The tool uses the POST command to re-upload the article.
 The article will be re-uploaded completely unchanged (same message ID, same subject), except for the date header, which will be updated to the current date.
 
-This is a very early alpha version, intended for initial testing only. It is very slow, with a purely sequential process flow and without any optimisation (parallel processing will be implemented later).
+This is a very early alpha version, intended for initial testing only.
 
 ## Installation
 1. Download the executable file for your system from the release page.
 2. Extract the archive.
-3. Edit the `config.json` according to your requirements.
+3. Edit the `provider.json` according to your requirements.
 
 ## Running the program
 Run the program in a cmd line with the following argument:
 
-`nzbrefresh "[PATHTONZBFILE]"`
+`nzbrefresh [--check] [--provider PROVIDER] [--debug] NZBFILE`
 
-- `[PATHTONZBFILE]` = Path to the NZB file you want to check/refresh
+   Positional arguments:
+   
+     NZBFILE                path to the NZB file to be checked (required)
+
+   Options:
+   
+     --check, -c            only check availability - don't re-upload (optional)
+     
+     --provider PROVIDER, -p PROVIDER
+                            path to the provider JSON config file (optional / default is: './provider.json')
+     
+     --debug, -d            logs additional output to log file (optional, log file will be named NZBFILENAME.log)
+     
+     --help, -h             display this help and exit
+     
+     --version              display version and exit
+     
 
 ## Todos
 A lot...
@@ -40,4 +56,9 @@ So there is certainly a lot left to do.
 This software is built using golang ([License](https://go.dev/LICENSE)).
 
 This software uses the following external libraries:
-- github.com/schollz/progressbar/v3 ([License](https://github.com/schollz/progressbar/blob/main/LICENSE))
+- github.com/alexflint/go-arg ([License](https://github.com/alexflint/go-arg/blob/master/LICENSE))
+- github.com/alexflint/go-scalar ([License](https://github.com/alexflint/go-scalar/blob/master/LICENSE))
+- github.com/fatih/color ([License](https://github.com/fatih/color/blob/main/LICENSE.md))
+- github.com/mattn/go-colorable ([License](https://github.com/mattn/go-colorable/blob/master/LICENSE))
+- github.com/mattn/go-isatty ([License](https://github.com/mattn/go-isatty/blob/master/LICENSE))
+- github.com/nu11ptr/cmpb ([License](https://github.com/nu11ptr/cmpb/blob/master/LICENSE))

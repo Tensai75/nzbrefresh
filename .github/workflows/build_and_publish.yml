@@ -54,7 +54,7 @@ jobs:
             binary_name=nzbrefresh
           fi
           GOARCH=${{ matrix.os-arch.arch }} GOOS=${{ matrix.os-arch.os }} go build -ldflags="-s -w -X main.appVersion=${{ env.REF_NAME }}" -o builds/${{ matrix.os-arch.name }}/usr/bin/$binary_name
-          zip -j "nzbrefresh_${{ env.REF_NAME }}-${{ matrix.os-arch.os }}-${{ matrix.os-arch.arch }}.zip" builds/${{ matrix.os-arch.name }}/usr/bin/$binary_name config.json
+          zip -j "nzbrefresh_${{ env.REF_NAME }}-${{ matrix.os-arch.os }}-${{ matrix.os-arch.arch }}.zip" builds/${{ matrix.os-arch.name }}/usr/bin/$binary_name provider.json
           # Makeing deb packages for linux and darwin
           if [ "${{ matrix.os-arch.os }}" == "linux"  ] || [ "${{ matrix.os-arch.os }}" == "darwin"  ]; then
             mkdir -p builds/${{ matrix.os-arch.name }}/DEBIAN

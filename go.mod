@@ -1,18 +1,18 @@
 module github.com/Tensai75/nzbrefresh
 
-go 1.22.2
+go 1.21
 
 require (
-	github.com/Tensai75/cmpb v0.0.0-20240601075616-76ce7bf974ae
-	github.com/Tensai75/nntp v0.1.0
-	github.com/Tensai75/nntpPool v0.1.0
-	github.com/Tensai75/nzbparser v0.0.0-20240511081422-ab40863e6df5
+	github.com/Tensai75/cmpb v0.0.0-20240601135142-b4420b2b9bf4
+	github.com/Tensai75/nntp v0.1.1
+	github.com/Tensai75/nntpPool v0.1.1
+	github.com/Tensai75/nzbparser v0.1.0
 	github.com/alexflint/go-arg v1.5.0
 	github.com/fatih/color v1.17.0
 )
 
 require (
-	github.com/Tensai75/subjectparser v0.0.0-20240511081302-1e97329a5fe7 // indirect
+	github.com/Tensai75/subjectparser v0.1.0 // indirect
 	github.com/alexflint/go-scalar v1.2.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect

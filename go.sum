@@ -10,6 +10,8 @@ github.com/Tensai75/nntpPool v0.1.0 h1:Oez/wioqARK1K/0T4jv1PP1CjuyaMx+/OU12FJXBy
 github.com/Tensai75/nntpPool v0.1.0/go.mod h1:VR6l4l91fB5JqInBRnYfJAO7EPyoDAiogbvidIIEJ5A=
 github.com/Tensai75/nntpPool v0.1.1 h1:uTLQflExR6LY7n6c868JSq/cHctEsvNbpIH4EDVcPAc=
 github.com/Tensai75/nntpPool v0.1.1/go.mod h1:cbIkz4S7+ex1Q+yjssONATY4zyzAJC0Bq0D+19e53ks=
+github.com/Tensai75/nntpPool v0.1.2 h1:nTDMZMmnjSUwm4aqvaYIyhT47bc6uINMTAKaWT0/kBw=
+github.com/Tensai75/nntpPool v0.1.2/go.mod h1:cbIkz4S7+ex1Q+yjssONATY4zyzAJC0Bq0D+19e53ks=
 github.com/Tensai75/nzbparser v0.0.0-20240511081422-ab40863e6df5 h1:3XCiYjDG0Gx3FiToJyibiMLda4zBRLnqcV6T9AnEFuI=
 github.com/Tensai75/nzbparser v0.0.0-20240511081422-ab40863e6df5/go.mod h1:GsLExFYgUcBQvETN0D91HeALBoAJPmXGvICFfsqEBtw=
 github.com/Tensai75/nzbparser v0.1.0 h1:6RppAuWFahqu/kKjWO5Br0xuEYcxGz+XBTxYc+qvPo4=

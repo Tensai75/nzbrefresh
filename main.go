@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"context"
+	"encoding/csv"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -10,6 +11,7 @@ import (
 	"os"
 	"path/filepath"
 	"slices"
+	"sort"
 	"strings"
 	"sync"
 	"sync/atomic"
@@ -56,9 +58,22 @@ type (
 	}
 )
 
+type (
+	segmentChanItem struct {
+		segment  nzbparser.NzbSegment
+		fileName string
+	}
+	providerStatistic map[string]uint64
+	fileStatistic     struct {
+		available     providerStatistic
+		totalSegments uint64
+	}
+	filesStatistic map[string]*fileStatistic
+)
+
 var (
 	appName      = "NZBRefresh"
-	appVersion   = ""           // string
+	appVersion   = ""           // Github tag
 	nzbfile      *nzbparser.Nzb // the parsed NZB file structure
 	providerList []Provider     // the parsed provider list structure
 
@@ -68,7 +83,7 @@ var (
 	err           error
 	maxConns      uint32
 	maxConnsLock  sync.Mutex
-	segmentChan   chan nzbparser.NzbSegment
+	segmentChan   chan segmentChanItem
 	segmentChanWG sync.WaitGroup
 	sendArticleWG sync.WaitGroup
 
@@ -96,6 +111,8 @@ var (
 		Full:         '=',
 		Curr:         '>',
 	})
+	fileStat     = make(filesStatistic)
+	fileStatLock sync.Mutex
 )
 
 func init() {
@@ -113,7 +130,7 @@ func init() {
 		log.SetOutput(io.Discard)
 	}
 
-	log.Printf("preparing...")
+	log.Print("preparing...")
 	preparationStartTime = time.Now()
 	// parse the argument
 
@@ -200,7 +217,7 @@ func init() {
 	}
 
 	// make the channels
-	segmentChan = make(chan nzbparser.NzbSegment, 8*maxConns)
+	segmentChan = make(chan segmentChanItem, 8*maxConns)
 
 	// run the go routines
 	for i := uint32(0); i < 4*maxConns; i++ {
@@ -229,11 +246,16 @@ func main() {
 	progressBars.Start()
 
 	// loop through all file tags within the NZB file
-	for _, files := range nzbfile.Files {
+	for _, file := range nzbfile.Files {
+		fileStatLock.Lock()
+		fileStat[file.Filename] = new(fileStatistic)
+		fileStat[file.Filename].available = make(providerStatistic)
+		fileStat[file.Filename].totalSegments = uint64(file.TotalSegments)
+		fileStatLock.Unlock()
 		// loop through all segment tags within each file tag
-		for _, segment := range files.Segments {
+		for _, segment := range file.Segments {
 			segmentChanWG.Add(1)
-			segmentChan <- segment
+			segmentChan <- segmentChanItem{segment, file.Filename}
 		}
 	}
 	segmentChanWG.Wait()
@@ -262,6 +284,7 @@ func main() {
 	runtime := fmt.Sprintf("Total runtime %v | %v ms/segment", time.Since(preparationStartTime), float32(time.Since(preparationStartTime).Milliseconds())/float32(nzbfile.Segments))
 	fmt.Println(runtime)
 	log.Print(runtime)
+	writeCsvFile()
 }
 
 func loadNzbFile(path string) (*nzbparser.Nzb, error) {
@@ -329,7 +352,9 @@ func checkCapabilities(provider *Provider) (bool, bool, error) {
 }
 
 func processSegment() {
-	for segment := range segmentChan {
+	for segmentChanItem := range segmentChan {
+		segment := segmentChanItem.segment
+		fileName := segmentChanItem.fileName
 		func() {
 			defer func() {
 				segmentChanWG.Done()
@@ -358,6 +383,9 @@ func processSegment() {
 						providerList[n].articles.checked.Add(1)
 						if isAvailable {
 							providerList[n].articles.available.Add(1)
+							fileStatLock.Lock()
+							fileStat[fileName].available[providerList[n].Name]++
+							fileStatLock.Unlock()
 							// if yes add the provider to the positiv list
 							availableOnLock.Lock()
 							availableOn = append(availableOn, &providerList[n])
@@ -554,6 +582,61 @@ func copyArticle(article *nntp.Article, body []byte) (*nntp.Article, error) {
 	}
 	newArticle.Body = bytes.NewReader(body)
 	return &newArticle, nil
+}
+
+func writeCsvFile() {
+	if args.Csv {
+		csvFileName := strings.TrimSuffix(filepath.Base(args.NZBFile), filepath.Ext(filepath.Base(args.NZBFile))) + ".csv"
+		f, err := os.Create(csvFileName)
+		if err != nil {
+			exit(fmt.Errorf("unable to open csv file: %v", err))
+		}
+		log.Println("writing csv file...")
+		fmt.Print("Writing csv file... ")
+		csvWriter := csv.NewWriter(f)
+		firstLine := true
+		// make sorted provider name slice
+		providers := make([]string, 0, len(providerList))
+		for n := range providerList {
+			providers = append(providers, providerList[n].Name)
+		}
+		sort.Strings(providers)
+		for fileName, file := range fileStat {
+			// write first line
+			if firstLine {
+				line := make([]string, len(providers)+2)
+				line[0] = "Filename"
+				line[1] = "Total segments"
+				for n, providerName := range providers {
+					line[n+2] = providerName
+				}
+				if err := csvWriter.Write(line); err != nil {
+					exit(fmt.Errorf("unable to write to the csv file: %v", err))
+				}
+				firstLine = false
+			}
+			// write line
+			line := make([]string, len(providers)+2)
+			line[0] = fileName
+			line[1] = fmt.Sprintf("%v", file.totalSegments)
+			for n, providerName := range providers {
+				if value, ok := file.available[providerName]; ok {
+					line[n+2] = fmt.Sprintf("%v", value)
+				} else {
+					line[n+2] = "0"
+				}
+			}
+			if err := csvWriter.Write(line); err != nil {
+				exit(fmt.Errorf("unable to write to the csv file: %v", err))
+			}
+		}
+		csvWriter.Flush()
+		if err := csvWriter.Error(); err != nil {
+			exit(fmt.Errorf("unable to write to the csv file: %v", err))
+		}
+		f.Close()
+		fmt.Print("done")
+	}
 }
 
 func exit(err error) {

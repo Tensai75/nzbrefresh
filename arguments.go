@@ -16,6 +16,7 @@ type Args struct {
 	CheckOnly bool   `arg:"-c, --check" help:"only check availability - don't re-upload"`
 	Provider  string `arg:"-p, --provider" help:"path to the provider JSON config file (Default: './provider.json')"`
 	Debug     bool   `arg:"-d, --debug" help:"logs additional output to log file"`
+	Csv       bool   `arg:"--csv" help:"writes statistic about available segements to a csv file"`
 }
 
 // version information

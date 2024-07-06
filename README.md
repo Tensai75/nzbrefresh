@@ -2,12 +2,14 @@
 [![Latest Release)](https://img.shields.io/github/v/release/Tensai75/nzbrefresh?logo=github)](https://github.com/Tensai75/nzbrefresh/releases/latest)
 
 # NZB Refresh
-Proof of concept for a cmd line tool to re-upload articles that are missing from providers with low retention or after takedowns.
+Proof of concept for a cmd line tool to re-upload articles that are missing from providers with low retention.
 
 The cmd line tool analyses the NZB file specified as positional argument and checks the availability of the individual articles at all Usenet providers listed in the provider.json.
-If an article is missing from one or more providers, but is still available from at least one provider, the tool downloads the article from the provider where the article is still available and re-uploads it to the providers where the article is missing.
-The tool uses the POST command to re-upload the article.
-The article will be re-uploaded completely unchanged (same message ID, same subject), except for the date header, which will be updated to the current date.
+If an article is missing from one or more providers, but is still available from at least another provider, the tool will download the article from one of the providers where the article is still available and attempt to re-upload the article using the POST command. It will first try to re-upload the article to one of the providers where the article is not available and, if this is not successful (e.g. due to missing POST capability), it will also try to re-upload the article to one of the other providers. However, the providers already haveing the article might refuse to accept the re-upload of the same article. So for best results, all usenet accounts used for this tool should have POST capability. 
+
+The article is re-uploaded completely unchanged (same message ID, same subject), with the exception of the date header, which is updated to the current date. Once the article has been uploaded to one provider, it should then propagate to all other providers.
+
+As a result, the upload should become available again at *all* providers and be able to be downloaded with the *identical* NZB file that was used for the refresh.
 
 This is a very early alpha version, intended for initial testing only.
 
@@ -38,6 +40,33 @@ Run the program in a cmd line with the following argument:
      
      --version              display version and exit
      
+
+## provider.json options
+`"Name": "Provider 1",` arbitrary name of the provider, used in the debug text/output
+
+`"Host": "",` usenet server host name or IP address
+
+`"Port": 119,` usenet server port number
+
+`"SSL": false,` if true, secure SSL connections will be used
+
+`"SkipSslCheck": true,` if true, certificate errors will be ignored
+
+`"Username": "",` usenet account username
+
+`"Password": "",` usenet account password
+
+`"ConnWaitTime": 10,` waiting time until reconnection after connection errors
+
+`"MaxConns": 50,` maximum number of connections to be used
+
+`"IdleTimeout": 30,` time after a connection is closed
+
+`"HealthCheck": false,` if true, will check health of connection bevore using it (will reduce speed)
+
+`"MaxTooManyConnsErrors": 3,` maximum number of consecutive "too manny connections error" after which MaxConns is automatically reduced
+
+`"MaxConnErrors": 3` maximum number of consecutive fatal connection errors after which the connection with the provider is deemed to have failed
 
 ## Todos
 A lot...

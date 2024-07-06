@@ -9,9 +9,11 @@ If an article is missing from one or more providers, but is still available from
 
 The article is re-uploaded completely unchanged (same message ID, same subject), with the exception of the date header, which is updated to the current date. Once the article has been uploaded to one provider, it should then propagate to all other providers.
 
-As a result, the upload should become available again at *all* providers and be able to be downloaded with the *identical* NZB file that was used for the refresh.
+As a result, the upload should become available again at *all* providers and be able to be downloaded with the *identical / original* NZB file that was used for the refresh.
 
-This is a very early alpha version, intended for initial testing only.
+__PLEASE NOTE: This is a very early alpha version, intended for initial testing only.__
+
+Bug reports are very welcome. Please open an issue for this. If possible, add a link to the NZB file that was used when the error occurred.
 
 ## Installation
 1. Download the executable file for your system from the release page.
@@ -62,7 +64,7 @@ Run the program in a cmd line with the following argument:
 
 `"IdleTimeout": 30,` time after a connection is closed
 
-`"HealthCheck": false,` if true, will check health of connection bevore using it (will reduce speed)
+`"HealthCheck": false,` if true, will check health of connection before using it (will reduce speed)
 
 `"MaxTooManyConnsErrors": 3,` maximum number of consecutive "too manny connections error" after which MaxConns is automatically reduced
 

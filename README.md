@@ -37,6 +37,8 @@ Run the program in a cmd line with the following argument:
                             path to the provider JSON config file (optional / default is: './provider.json')
      
      --debug, -d            logs additional output to log file (optional, log file will be named NZBFILENAME.log)
+
+     --csv                  writes statistic about available segements to a csv file (optional, csv file will be named NZBFILENAME.csv)
      
      --help, -h             display this help and exit
      

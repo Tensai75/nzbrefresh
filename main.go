@@ -450,8 +450,8 @@ func checkMessageID(provider *Provider, messageID string) (bool, error) {
 		return false, err
 	} else {
 		defer provider.pool.Put(conn)
-		if article, err := conn.Head("<" + messageID + ">"); article != nil {
-			// if header is availabel return true
+		if _, _, err := conn.Stat("<" + messageID + ">"); err == nil {
+			// if article is availabel return true
 			return true, nil
 		} else {
 			if err.Error()[0:3] == "430" {

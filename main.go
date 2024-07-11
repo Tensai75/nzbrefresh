@@ -261,7 +261,7 @@ func main() {
 	segmentChanWG.Wait()
 	segmentBar.SetMessage("done")
 	sendArticleWG.Wait()
-	if !args.CheckOnly {
+	if uploadBarStarted {
 		uploadBar.SetMessage("done")
 	}
 	progressBars.Wait()

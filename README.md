@@ -72,13 +72,23 @@ Run the program in a cmd line with the following argument:
 
 `"MaxConnErrors": 3` maximum number of consecutive fatal connection errors after which the connection with the provider is deemed to have failed
 
-## Todos
-A lot...
+## TODOs
+- option to set the priority for the providers to be used for re-uploading
+- option to use either the STAT, HEAD or BODY command for the check
+- option to use the IHAVE command for re-uploading (not implemented with most providers, however)
+- folder monitoring with automatic checking
+- ...?
 
 This is a Proof of Concept with the minimum necessary features. 
-So there is certainly a lot left to do.
+The TODOs is what I currently plan to implement but there is certainly also a lot of other things left to do.
 
 ## Version history
+### alpha 3
+- fix for panic errors (should fix all errors in issue [#1](https://github.com/Tensai75/nzbrefresh/issues/1))
+- added --csv switch for csv output of available segements per file per provider
+- use STAT instead of HEAD (should improve speed)
+- a lot of refactoring
+
 ### alpha 2
 - highly improved version with parallel processing
 
